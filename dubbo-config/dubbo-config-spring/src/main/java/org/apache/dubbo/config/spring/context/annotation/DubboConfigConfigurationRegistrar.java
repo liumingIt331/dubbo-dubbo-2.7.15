@@ -66,6 +66,8 @@ public class DubboConfigConfigurationRegistrar implements ImportBeanDefinitionRe
         }
 
         // Since 2.7.6
+
+        // 注册一些bean的后置处理器
         registerCommonBeans(registry);
     }
 

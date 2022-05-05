@@ -94,11 +94,13 @@ public abstract class DubboBeanUtils {
                 DubboApplicationListenerRegistrar.class);
 
         // Since 2.7.6 Register DubboConfigDefaultPropertyValueBeanPostProcessor as an infrastructure Bean
-        // 4.
+        // 4. BeanPostProcessor处理一些默认属性
         registerInfrastructureBean(registry, DubboConfigDefaultPropertyValueBeanPostProcessor.BEAN_NAME,
                 DubboConfigDefaultPropertyValueBeanPostProcessor.class);
 
         // Since 2.7.15 Register DubboConfigEarlyRegistrationPostProcessor as an infrastructure Bean
+
+        // 5. 初始化时注册一个BeanPostProcessor，bean初始化前把serviceConfig（ServiceBean）添加到ConfigManage中
         registerInfrastructureBean(registry, DubboConfigEarlyRegistrationPostProcessor.BEAN_NAME,
                 DubboConfigEarlyRegistrationPostProcessor.class);
     }

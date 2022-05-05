@@ -16,12 +16,11 @@
  */
 package org.apache.dubbo.config.spring.beans.factory.config;
 
-import org.apache.dubbo.config.AbstractConfig;
-import org.apache.dubbo.config.context.ConfigManager;
-
 import com.alibaba.spring.beans.factory.config.GenericBeanPostProcessorAdapter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.dubbo.config.AbstractConfig;
+import org.apache.dubbo.config.context.ConfigManager;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -86,6 +85,7 @@ public class DubboConfigEarlyRegistrationPostProcessor implements BeanDefinition
     private void registryConfigEarlyInitializationPostProcessor(DefaultListableBeanFactory beanFactory) {
         if (beanFactory != null) {
             // Register DubboConfigEarlyInitializationPostProcessor
+            // 注册bean后置处理器，初始化前把自身 serviceConfig存到ConfigManager里去
             beanFactory.addBeanPostProcessor(configEarlyInitializationPostProcessor);
             if (logger.isInfoEnabled()) {
                 logger.info("DubboConfigEarlyInitializationPostProcessor has bean registered");
@@ -114,6 +114,8 @@ public class DubboConfigEarlyRegistrationPostProcessor implements BeanDefinition
 
             // If CommonAnnotationBeanPostProcessor is already registered,  the method addIntoConfigManager()
             // will be invoked in Bean life cycle.
+
+            // CommonAnnotationBeanPostProcessor存在时执行
             if (!hasRegisteredCommonAnnotationBeanPostProcessor()) {
                 if (logger.isWarnEnabled()) {
                     logger.warn("CommonAnnotationBeanPostProcessor is not registered yet, " +
