@@ -65,10 +65,14 @@ public abstract class DubboBeanUtils {
     public static void registerCommonBeans(BeanDefinitionRegistry registry) {
 
         // Since 2.5.7 Register @Reference Annotation Bean Processor as an infrastructure Bean
+        // 1.注册Bean的后置处理器ReferenceAnnotationBeanPostProcessor，用于@Reference的依赖注入
         registerInfrastructureBean(registry, ReferenceAnnotationBeanPostProcessor.BEAN_NAME,
                 ReferenceAnnotationBeanPostProcessor.class);
 
         // Since 2.7.4 [Feature] https://github.com/apache/dubbo/issues/5093
+        // 2.注册DubboConfigAliasPostProcessor
+        // bean工厂后置处理器 暂时没什么逻辑
+        // bean后置处理器 注册别名
         registerInfrastructureBean(registry, DubboConfigAliasPostProcessor.BEAN_NAME,
                 DubboConfigAliasPostProcessor.class);
 
@@ -83,10 +87,14 @@ public abstract class DubboBeanUtils {
         // registerInfrastructureBean(registry, DubboBootstrapApplicationListener.BEAN_NAME,
         //        DubboBootstrapApplicationListener.class);
 
+        // 3. 注册spring监听，添加两个监听器， 监听ContextRefreshedEvent、ContextClosedEvent
+        //      DubboBootstrapApplicationListener 初始化DubboBootstrap  负责dubbo启动和关闭
+        //      DubboLifecycleComponentApplicationListener  dubbo生命周期组件的初始化和销毁
         registerInfrastructureBean(registry, DubboApplicationListenerRegistrar.BEAN_NAME,
                 DubboApplicationListenerRegistrar.class);
 
         // Since 2.7.6 Register DubboConfigDefaultPropertyValueBeanPostProcessor as an infrastructure Bean
+        // 4.
         registerInfrastructureBean(registry, DubboConfigDefaultPropertyValueBeanPostProcessor.BEAN_NAME,
                 DubboConfigDefaultPropertyValueBeanPostProcessor.class);
 

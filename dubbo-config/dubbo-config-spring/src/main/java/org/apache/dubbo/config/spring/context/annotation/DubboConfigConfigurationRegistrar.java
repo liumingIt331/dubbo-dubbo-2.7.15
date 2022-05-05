@@ -51,6 +51,13 @@ public class DubboConfigConfigurationRegistrar implements ImportBeanDefinitionRe
 
         boolean multiple = attributes.getBoolean("multiple");
 
+        /**
+         * @EnableConfigurationBeanBinding 注解对应配置文件的路径
+         * registerBeans负责解析注解 并注册成为配置bean
+         *
+         * ConfigurationBeanBindingRegistrar
+         */
+
         // Single Config Bindings
         registerBeans(registry, DubboConfigConfiguration.Single.class);
 

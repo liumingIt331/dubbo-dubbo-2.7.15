@@ -67,6 +67,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
+// 配置的解析
 @Import(DubboConfigConfigurationRegistrar.class)
 public @interface EnableDubboConfig {
 
