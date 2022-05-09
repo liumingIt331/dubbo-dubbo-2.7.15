@@ -45,6 +45,7 @@ public class DubboConfigConfigurationRegistrar implements ImportBeanDefinitionRe
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
+        System.out.println("执行DubboConfigConfigurationRegistrar注册器registerBeanDefinitions");
 
         AnnotationAttributes attributes = AnnotationAttributes.fromMap(
                 importingClassMetadata.getAnnotationAttributes(EnableDubboConfig.class.getName()));
@@ -55,7 +56,9 @@ public class DubboConfigConfigurationRegistrar implements ImportBeanDefinitionRe
          * @EnableConfigurationBeanBinding 注解对应配置文件的路径
          * registerBeans负责解析注解 并注册成为配置bean
          *
-         * ConfigurationBeanBindingRegistrar
+         * import bean
+         * ConfigurationBeanBindingsRegister 注册各种configbean  AplicationConfig、ProtocolConfig等，
+         * 还会注册Bean的后置处理器ConfigurationBeanBindingPostProcessor
          */
 
         // Single Config Bindings

@@ -123,6 +123,7 @@ public class ServiceClassPostProcessor implements BeanDefinitionRegistryPostProc
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
 
         // @since 2.7.5
+//        监听ContextRefreshedEvent和onContextClosedEvent事件
         registerInfrastructureBean(registry, DubboBootstrapApplicationListener.BEAN_NAME, DubboBootstrapApplicationListener.class);
 
         Set<String> resolvedPackagesToScan = resolvePackagesToScan(packagesToScan);
@@ -145,6 +146,7 @@ public class ServiceClassPostProcessor implements BeanDefinitionRegistryPostProc
      */
     private void registerServiceBeans(Set<String> packagesToScan, BeanDefinitionRegistry registry) {
 
+//        DubboClassPathBeanDefinitionScanner
         DubboClassPathBeanDefinitionScanner scanner =
                 new DubboClassPathBeanDefinitionScanner(registry, environment, resourceLoader);
 
@@ -153,6 +155,7 @@ public class ServiceClassPostProcessor implements BeanDefinitionRegistryPostProc
         scanner.setBeanNameGenerator(beanNameGenerator);
 
         // refactor @since 2.7.7
+//        扫描过滤器
         serviceAnnotationTypes.forEach(annotationType -> {
             scanner.addIncludeFilter(new AnnotationTypeFilter(annotationType));
         });
@@ -160,6 +163,7 @@ public class ServiceClassPostProcessor implements BeanDefinitionRegistryPostProc
         for (String packageToScan : packagesToScan) {
 
             // Registers @Service Bean first
+//            开始扫描，扫描后会注册接口的实现类
             scanner.scan(packageToScan);
 
             // Finds all BeanDefinitionHolders of @Service whether @ComponentScan scans or not.
@@ -286,6 +290,7 @@ public class ServiceClassPostProcessor implements BeanDefinitionRegistryPostProc
 
         String annotatedServiceBeanName = beanDefinitionHolder.getBeanName();
 
+//        构建ServiceBean的BeanDefinition ref属性指向具体得实现类
         AbstractBeanDefinition serviceBeanDefinition =
                 buildServiceBeanDefinition(service, serviceAnnotationAttributes, interfaceClass, annotatedServiceBeanName);
 
@@ -293,6 +298,7 @@ public class ServiceClassPostProcessor implements BeanDefinitionRegistryPostProc
         String beanName = generateServiceBeanName(serviceAnnotationAttributes, interfaceClass);
 
         if (scanner.checkCandidate(beanName, serviceBeanDefinition)) { // check duplicated candidate bean
+            // 注册ServiceBean
             registry.registerBeanDefinition(beanName, serviceBeanDefinition);
             if (!serviceBeanDefinition.getPropertyValues().contains("id")) {
                 serviceBeanDefinition.getPropertyValues().addPropertyValue("id", beanName);
@@ -398,6 +404,9 @@ public class ServiceClassPostProcessor implements BeanDefinitionRegistryPostProc
                 "interface", "interfaceName", "parameters");
 
         propertyValues.addPropertyValues(new AnnotationPropertyValuesAdapter(serviceAnnotation, environment, ignoreAttributeNames));
+
+//        addPropertyReference 引用属性，根据beanName生成RuntimeBeanReference，
+//        在getBean时BeanDefinitionValueResolver将真正的依赖bean和referBeanName关联起来
 
         // References "ref" property to annotated-@Service Bean
         addPropertyReference(builder, "ref", annotatedServiceBeanName);
